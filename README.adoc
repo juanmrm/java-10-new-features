@@ -1,0 +1,6 @@
+= Java 10 Major Features
+
+Testing Java 10 new features
+
+==== New Features:
+- Local variable type inference
