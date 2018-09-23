@@ -3,5 +3,11 @@
 Testing Java 10 new features
 
 ==== New Features:
-- Local variable type inference
-- Best practices http://openjdk.java.net/projects/amber/LVTIstyle.html
+- Local variable type inference - Best practices http://openjdk.java.net/projects/amber/LVTIstyle.html
+- APIs for Creating Unmodifiable Collections:
+    . List.copyOf, Set.copyOf, and Map.copyOf
+    . toUnmodifiableList, toUnmodifiableSet, and toUnmodifiableMap added to Collectors class in Stream package
+- Optional.orElseThrow() Method: preferred as an alternative to the existing get method
+- Parallel Full GC for G1
+
+

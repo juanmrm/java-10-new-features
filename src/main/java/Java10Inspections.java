@@ -1,15 +1,43 @@
 import dto.Person;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toUnmodifiableSet;
 
 public class Java10Inspections {
+
+    private List<Person> getEveryone() {
+        return List.of(
+                new Person("John", 33),
+                new Person("Mary", 30)
+        );
+    }
+
+
+    // Creating UNMODIFIABLE COLLECTIONS
+
+    private List<Person> makeUnmodifiableList(List<Person> people) {
+        return List.copyOf(people);
+    }
+
+    private Set<Person> makeUnmodifiableSet(List<Person> people) {
+        return people.stream()
+                .collect(toUnmodifiableSet());
+    }
+
+
+
+
+    // Working with LOCAL VARIABLE TYPE INFERENCE
 
     private List<Person> varOnlyAppliesToLocalVariables(Person person) {
         final var people = List.of(person);
@@ -32,7 +60,7 @@ public class Java10Inspections {
     }
 
 
-    /* Example of best practice **/
+    /* Example of BEST PRACTICES: http://openjdk.java.net/projects/amber/LVTIstyle.html **/
 
     private void chooseVariableNamesThatProvideUsefulInformation() {
         var listOfPerson = getEveryone();
@@ -102,11 +130,12 @@ public class Java10Inspections {
         return map;
     }
 
-    private List<Person> getEveryone() {
-        return List.of(
-                new Person("John", 33),
-                new Person("Mary", 30)
-        );
+    private String exampleTryWithResources(Socket socket, String charsetName) throws IOException {
+        try (var is = socket.getInputStream();
+             var isr = new InputStreamReader(is, charsetName);
+             var buf = new BufferedReader(isr)) {
+            return buf.readLine();
+        }
     }
 
     public static void main(String[] args) throws IOException {
