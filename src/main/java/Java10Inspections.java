@@ -4,9 +4,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
+
+import static java.util.stream.Collectors.counting;
+import static java.util.stream.Collectors.groupingBy;
 
 public class Java10Inspections {
 
@@ -30,7 +31,9 @@ public class Java10Inspections {
         return people;
     }
 
-    // Example of best practice, as per http://openjdk.java.net/projects/amber/LVTIstyle.html
+
+    /* Example of best practice **/
+
     private void chooseVariableNamesThatProvideUsefulInformation() {
         var listOfPerson = getEveryone();
         System.out.println(listOfPerson);
@@ -65,6 +68,40 @@ public class Java10Inspections {
         return outputStream;
     }
 
+    private void takeCareWhenUsingVarWithDiamondOrGenericMethods() {
+        var safeList = List.of("One");
+
+        // Si lo pasamos a var sera una List<Object>
+        List<String> unsafeList = List.of();
+
+        var safeArrayList = new ArrayList<String>();
+
+        // Si lo pasamos a var sera una ArrayList<Object>
+        ArrayList<String> unsafeArrayList = new ArrayList<>();
+    }
+
+    private Optional<String> useVarToBreakUpChainedOrNestedExpressionsWithLocalVariables(List<String> strings) {
+        var entries = strings.stream()
+                             .collect(groupingBy(s -> s, counting()))
+                             .entrySet();
+
+        var max = entries.stream()
+                         .max(Map.Entry.comparingByValue());
+
+        return max.map(Map.Entry::getKey);
+    }
+
+    private Map removeMatches(Map<? extends String, ? extends Number> map, String key, int max) {
+        for (var iterator = map. entrySet().iterator(); iterator.hasNext();) {
+            var entry = iterator.next();
+            if (max > 0 && entry.getKey().matches(key)) {
+                iterator.remove();
+                max--;
+            }
+        }
+        return map;
+    }
+
     private List<Person> getEveryone() {
         return List.of(
                 new Person("John", 33),
@@ -74,7 +111,20 @@ public class Java10Inspections {
 
     public static void main(String[] args) throws IOException {
 
+        var strings = List.of(
+                "One",
+                "Two",
+                "Three",
+                "Four",
+                "Five",
+                "One"
+        );
+
+        System.out.println("\nAvailable processors: " + Runtime.getRuntime().availableProcessors());
+
         var java10Inspections = new Java10Inspections();
+
+        /*
 
         System.out.println("\n###### chooseVariableNamesThatProvideUsefulInformation ######");
         java10Inspections.chooseVariableNamesThatProvideUsefulInformation();
@@ -84,6 +134,21 @@ public class Java10Inspections {
 
         System.out.println("\n###### considerVarWhenInitializerProvidesSufficientInformationToReader ######");
         java10Inspections.considerVarWhenInitializerProvidesSufficientInformationToReader();
+
+        System.out.println("\n##### useVarToBreakUpChainedOrNestedExpressionsWithLocalVariables #####");
+        java10Inspections.useVarToBreakUpChainedOrNestedExpressionsWithLocalVariables(strings)
+                .ifPresent(System.out::println);
+
+        */
+
+        System.out.println("\n##### removeMatches #####");
+        var entries = strings.stream()
+                             .collect(groupingBy(s -> s, counting()));
+
+
+        System.out.println(java10Inspections.removeMatches(entries, "One", 2));
+
+
     }
 
 }

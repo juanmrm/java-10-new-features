@@ -4,3 +4,4 @@ Testing Java 10 new features
 
 ==== New Features:
 - Local variable type inference
+- Best practices http://openjdk.java.net/projects/amber/LVTIstyle.html
